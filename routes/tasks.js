@@ -6,7 +6,7 @@ let tasks =[];
 //La funcion definida con req, los datos requeridos, res la respuesta y netx en caso de usar middleware
 router.get('/getTasks', function(req, res, next){
 // con lo que estamos creando retornara un Json, antes de inicial 
-    res.json(tasks);
+    res.status(200).json(tasks);
 })
 
 router.post('/addTask', function(req, res, next){
@@ -16,8 +16,11 @@ router.post('/addTask', function(req, res, next){
     if(req.body && req.body.name && req.body.description && req.body.dueDate){
         req.body.id = timestamp.toString;
         tasks.push(req.body);
+        res.status(200).json(tasks);//agregamos status 200 para indicar que todo va bien
+    }else{
+        res.status(400).json({error:"no se esta enviando parametro"});//aca enviamos un error definido ademas del status 400
     }
-    res.json(tasks);
+   
 })
 
 router.delete('/removeTask/:id', function(req, res, next){
@@ -28,9 +31,9 @@ router.delete('/removeTask/:id', function(req, res, next){
         // pedimos que revise que hay parametros y que se envie el id
         let id = req.params.id;
         tasks = tasks.filter(task=> task.id !== id)// recorre el arreglo y si encuentra un id igual al que enviamos
-        res.json(tasks);
+        res.status(200).json(tasks);//aca agregamos el 200 porque todo esta correcto
     } else{
-        res.json([{}]);
+        res.status(400).json([{}]);//estado 400 evaluando que no se enviaron todos los parametrso  
     }
    
 })
